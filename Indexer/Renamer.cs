@@ -6,14 +6,6 @@ namespace Indexer
 {
     public class Renamer
     {
-        public Renamer()
-        {
-        }
-
-        public void Run()
-        {
-        }
-
         void RenameFile(FileInfo f)
         {
             if  (f.FullName.EndsWith(".txt")) return;
@@ -27,8 +19,6 @@ namespace Indexer
 
         public void Crawl(DirectoryInfo dir)
         {
-        
-
             Console.WriteLine("Crawling " + dir.FullName);
 
             foreach (var file in dir.EnumerateFiles())
@@ -36,7 +26,6 @@ namespace Indexer
 
             foreach (var d in dir.EnumerateDirectories())
                 Crawl(d);
-
         }
 
     

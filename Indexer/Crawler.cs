@@ -49,7 +49,6 @@ namespace Indexer
         // the number of occurrences of the key.
         public void IndexFilesIn(DirectoryInfo dir, List<string> extensions)
         {
-            
             Console.WriteLine("Crawling " + dir.FullName);
 
             foreach (var file in dir.EnumerateFiles())

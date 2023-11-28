@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common;
-using Microsoft.Data.Sqlite;
+using Microsoft.Data.SqlClient;
 
 namespace Indexer
 {
     public class Database
     {
-        private SqliteConnection _connection;
+        private SqlConnection _connection;
         
         public Database()
         {
-            var connectionStringBuilder = new SqliteConnectionStringBuilder();
-            connectionStringBuilder.Mode = SqliteOpenMode.ReadWriteCreate;
-            connectionStringBuilder.DataSource = Config.DatabasePath;
-            
-            _connection = new SqliteConnection(connectionStringBuilder.ConnectionString);
+            _connection = new ("");
             _connection.Open();
 
             Execute("DROP TABLE IF EXISTS Occ");
@@ -96,13 +92,13 @@ namespace Indexer
         }
         public void InsertWord(int id, string word)
         {
-            var insertCmd = new SqliteCommand("INSERT INTO word(id, name) VALUES(@id,@name)");
+            var insertCmd = new SqlCommand("INSERT INTO word(id, name) VALUES(@id,@name)");
             insertCmd.Connection = _connection;
 
-            var pName = new SqliteParameter("name", word);
+            var pName = new SqlParameter("name", word);
             insertCmd.Parameters.Add(pName);
 
-            var pCount = new SqliteParameter("id", id);
+            var pCount = new SqlParameter("id", id);
             insertCmd.Parameters.Add(pCount);
 
             insertCmd.ExecuteNonQuery();
@@ -110,13 +106,13 @@ namespace Indexer
 
         public void InsertDocument(int id, string url)
         {
-            var insertCmd = new SqliteCommand("INSERT INTO document(id, url) VALUES(@id,@url)");
+            var insertCmd = new SqlCommand("INSERT INTO document(id, url) VALUES(@id,@url)");
             insertCmd.Connection = _connection;
 
-            var pName = new SqliteParameter("url", url);
+            var pName = new SqlParameter("url", url);
             insertCmd.Parameters.Add(pName);
 
-            var pCount = new SqliteParameter("id", id);
+            var pCount = new SqlParameter("id", id);
             insertCmd.Parameters.Add(pCount);
 
             insertCmd.ExecuteNonQuery();

@@ -1,8 +1,14 @@
 services:
-  
+  word-db:
+    image: mcr.microsoft.com/mssql/server
+    container_name: my_mssql_container
+    environment:
+      SA_PASSWORD: "$up€r$€cr€tPWD"
+      ACCEPT_EULA: "Y"
+    ports:
+      - 1433:1433
+    volumes:
+      - mssql-data:/var/opt/mssql
 
 volumes:
-  sqlsystem:
-  sqldata:
-  sqllog:
-  sqlbackup:
+  mssql-data:
