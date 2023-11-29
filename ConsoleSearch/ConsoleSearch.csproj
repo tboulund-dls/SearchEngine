@@ -11,10 +11,12 @@
     <None Remove="Microsoft.Data.Sqlite" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
     <PackageReference Include="SQLitePCLRaw.core" Version="2.0.7" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <Reference Include="Microsoft.Data.SqlClient">
+      <HintPath>..\Indexer\bin\Debug\net7.0\Microsoft.Data.SqlClient.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

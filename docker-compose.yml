@@ -1,9 +1,8 @@
 services:
   word-db:
-    image: mcr.microsoft.com/mssql/server
-    container_name: my_mssql_container
+    image: mcr.microsoft.com/azure-sql-edge:latest
     environment:
-      SA_PASSWORD: "$up€r$€cr€tPWD"
+      MSSQL_SA_PASSWORD: "SuperSecret7!"
       ACCEPT_EULA: "Y"
     ports:
       - 1433:1433

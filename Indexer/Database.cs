@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Common;
+﻿using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 
 namespace Indexer
@@ -11,28 +9,31 @@ namespace Indexer
         
         public Database()
         {
-            _connection = new ("");
+            _connection = new ("Server=localhost;User Id=sa;Password=SuperSecret7!;Encrypt=false;");
             _connection.Open();
-
+            
             Execute("DROP TABLE IF EXISTS Occ");
+            Execute("DROP TABLE IF EXISTS word");
+            Execute("DROP TABLE IF EXISTS document");
+            
+            
+            Execute("CREATE TABLE document(id INTEGER PRIMARY KEY, url VARCHAR(500))");
+            Execute("CREATE TABLE word(id INTEGER PRIMARY KEY, name VARCHAR(500))");
             Execute("CREATE TABLE Occ(wordId INTEGER, docId INTEGER, "
                     + "FOREIGN KEY (wordId) REFERENCES word(id), "
                     + "FOREIGN KEY (docId) REFERENCES document(id))");
-            
-            Execute("DROP TABLE IF EXISTS document");
-            Execute("CREATE TABLE document(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(500))");
-            
-            Execute("DROP TABLE IF EXISTS word");
-            Execute("CREATE TABLE word(id INTEGER PRIMARY KEY, name VARCHAR(50))");
             
             //Execute("CREATE INDEX word_index ON Occ (wordId)");
         }
 
         private void Execute(string sql)
         {
+            using var trans = _connection.BeginTransaction();
             var cmd = _connection.CreateCommand();
+            cmd.Transaction = trans;
             cmd.CommandText = sql;
             cmd.ExecuteNonQuery();
+            trans.Commit();
         }
 
         internal void InsertAllWords(Dictionary<string, int> res)
@@ -40,6 +41,7 @@ namespace Indexer
             using (var transaction = _connection.BeginTransaction())
             {
                 var command = _connection.CreateCommand();
+                command.Transaction = transaction;
                 command.CommandText = @"INSERT INTO word(id, name) VALUES(@id,@name)";
 
                 var paramName = command.CreateParameter();
@@ -68,6 +70,7 @@ namespace Indexer
             using (var transaction = _connection.BeginTransaction())
             {
                 var command = _connection.CreateCommand();
+                command.Transaction = transaction;
                 command.CommandText = @"INSERT INTO occ(wordId, docId) VALUES(@wordId,@docId)";
 
                 var paramwordId = command.CreateParameter();

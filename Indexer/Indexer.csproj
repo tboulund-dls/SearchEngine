@@ -24,10 +24,5 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
-    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.7" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.2" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 </Project>
