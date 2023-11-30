@@ -12,16 +12,16 @@ namespace Indexer
             _connection = new ("Server=localhost;User Id=sa;Password=SuperSecret7!;Encrypt=false;");
             _connection.Open();
             
-            Execute("DROP TABLE IF EXISTS Occ");
-            Execute("DROP TABLE IF EXISTS word");
-            Execute("DROP TABLE IF EXISTS document");
+            Execute("DROP TABLE IF EXISTS Occurrences");
+            Execute("DROP TABLE IF EXISTS Words");
+            Execute("DROP TABLE IF EXISTS Documents");
             
             
-            Execute("CREATE TABLE document(id INTEGER PRIMARY KEY, url VARCHAR(500))");
-            Execute("CREATE TABLE word(id INTEGER PRIMARY KEY, name VARCHAR(500))");
-            Execute("CREATE TABLE Occ(wordId INTEGER, docId INTEGER, "
-                    + "FOREIGN KEY (wordId) REFERENCES word(id), "
-                    + "FOREIGN KEY (docId) REFERENCES document(id))");
+            Execute("CREATE TABLE Documents(id INTEGER PRIMARY KEY, url VARCHAR(500))");
+            Execute("CREATE TABLE Words(id INTEGER PRIMARY KEY, name VARCHAR(500))");
+            Execute("CREATE TABLE Occurrences(wordId INTEGER, docId INTEGER, "
+                    + "FOREIGN KEY (wordId) REFERENCES Words(id), "
+                    + "FOREIGN KEY (docId) REFERENCES Documents(id))");
             
             //Execute("CREATE INDEX word_index ON Occ (wordId)");
         }
@@ -42,7 +42,7 @@ namespace Indexer
             {
                 var command = _connection.CreateCommand();
                 command.Transaction = transaction;
-                command.CommandText = @"INSERT INTO word(id, name) VALUES(@id,@name)";
+                command.CommandText = @"INSERT INTO Words(id, name) VALUES(@id,@name)";
 
                 var paramName = command.CreateParameter();
                 paramName.ParameterName = "name";
@@ -71,7 +71,7 @@ namespace Indexer
             {
                 var command = _connection.CreateCommand();
                 command.Transaction = transaction;
-                command.CommandText = @"INSERT INTO occ(wordId, docId) VALUES(@wordId,@docId)";
+                command.CommandText = @"INSERT INTO Occurrences(wordId, docId) VALUES(@wordId,@docId)";
 
                 var paramwordId = command.CreateParameter();
                 paramwordId.ParameterName = "wordId";
@@ -95,7 +95,7 @@ namespace Indexer
         }
         public void InsertWord(int id, string word)
         {
-            var insertCmd = new SqlCommand("INSERT INTO word(id, name) VALUES(@id,@name)");
+            var insertCmd = new SqlCommand("INSERT INTO Words(id, name) VALUES(@id,@name)");
             insertCmd.Connection = _connection;
 
             var pName = new SqlParameter("name", word);
@@ -109,7 +109,7 @@ namespace Indexer
 
         public void InsertDocument(int id, string url)
         {
-            var insertCmd = new SqlCommand("INSERT INTO document(id, url) VALUES(@id,@url)");
+            var insertCmd = new SqlCommand("INSERT INTO Documents(id, url) VALUES(@id,@url)");
             insertCmd.Connection = _connection;
 
             var pName = new SqlParameter("url", url);
@@ -126,7 +126,7 @@ namespace Indexer
             Dictionary<string, int> res = new Dictionary<string, int>();
       
             var selectCmd = _connection.CreateCommand();
-            selectCmd.CommandText = "SELECT * FROM word";
+            selectCmd.CommandText = "SELECT * FROM Words";
 
             using (var reader = selectCmd.ExecuteReader())
             {
