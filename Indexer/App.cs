@@ -23,14 +23,6 @@ namespace Indexer
             
             TimeSpan used = DateTime.Now - start;
             Console.WriteLine("DONE! used " + used.TotalMilliseconds);
-
-            var all = db.GetAllWords();
-
-            foreach (var p in all)
-            {
-                Console.WriteLine("<" + p.Key + ", " + p.Value + ">");
-                break;
-            }
         }
     }
 }
