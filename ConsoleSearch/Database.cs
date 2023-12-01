@@ -27,9 +27,7 @@ namespace ConsoleSearch
         {
             var res = new List<KeyValuePair<int, int>>();
 
-            var sql = @"SELECT docId, COUNT(wordId) as count FROM Occurrences where ";
-            sql += "wordId in " + AsString(wordIds) + " GROUP BY docId ";
-            sql += "ORDER BY count DESC;";
+            var sql = @"SELECT docId, COUNT(wordId) AS count FROM Occurrences WHERE wordId IN " + AsString(wordIds) + " GROUP BY docId ORDER BY count DESC;";
 
             var selectCmd = _connection.CreateCommand();
             selectCmd.CommandText = sql;
@@ -78,7 +76,7 @@ namespace ConsoleSearch
             List<string> res = new List<string>();
 
             var selectCmd = _connection.CreateCommand();
-            selectCmd.CommandText = "SELECT * FROM Documents where id in " + AsString(docIds);
+            selectCmd.CommandText = "SELECT * FROM Documents WHERE id IN " + AsString(docIds);
 
             using (var reader = selectCmd.ExecuteReader())
             {
