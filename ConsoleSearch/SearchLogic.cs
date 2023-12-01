@@ -5,13 +5,12 @@ namespace ConsoleSearch
 {
     public class SearchLogic
     {
-        Database mDatabase;
+        Database mDatabase = new();
 
         Dictionary<string, int> mWords;
 
-        public SearchLogic(Database database)
+        public SearchLogic()
         {
-            mDatabase = database;
             mWords = mDatabase.GetAllWords();
         }
 

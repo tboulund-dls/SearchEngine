@@ -7,7 +7,7 @@ namespace ConsoleSearch
     {
         public void Run()
         {
-            SearchLogic mSearchLogic = new SearchLogic(new Database());
+            SearchLogic mSearchLogic = new SearchLogic();
             Console.WriteLine("Console Search");
             
             while (true)
