@@ -93,19 +93,6 @@ namespace Indexer
                 transaction.Commit();
             }
         }
-        public void InsertWord(int id, string word)
-        {
-            var insertCmd = new SqlCommand("INSERT INTO Words(id, name) VALUES(@id,@name)");
-            insertCmd.Connection = _connection;
-
-            var pName = new SqlParameter("name", word);
-            insertCmd.Parameters.Add(pName);
-
-            var pCount = new SqlParameter("id", id);
-            insertCmd.Parameters.Add(pCount);
-
-            insertCmd.ExecuteNonQuery();
-        }
 
         public void InsertDocument(int id, string url)
         {
