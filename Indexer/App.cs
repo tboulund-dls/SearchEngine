@@ -9,8 +9,7 @@ namespace Indexer
     {
         public void Run()
         {
-            Database db = new Database();
-            Crawler crawler = new Crawler(db);
+            Crawler crawler = new Crawler();
 
             var directoryArray = new DirectoryInfo("maildir").GetDirectories();
             var directories = new List<DirectoryInfo>(directoryArray).OrderBy(d => d.Name).AsEnumerable();
