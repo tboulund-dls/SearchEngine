@@ -79,7 +79,5 @@ namespace Indexer
                 IndexFilesIn(d, extensions);
             }
         }
-
-        
     }
 }
