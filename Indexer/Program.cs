@@ -13,9 +13,6 @@ namespace Indexer
             Directory.Delete("maildir", true);
             TarFile.ExtractToDirectory("mails.tar", ".", false);
             
-            Console.WriteLine("Done");
-            
-            //new App().Run();
             new Renamer().Crawl(new DirectoryInfo("maildir"));
             new App().Run();
         }
