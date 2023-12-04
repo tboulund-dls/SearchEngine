@@ -9,13 +9,13 @@ public class DocumentController : ControllerBase
     private Database database = Database.GetInstance();
 
     [HttpGet("GetByDocIds")]
-    public List<string> GetByDocIds(List<int> docIds)
+    public List<string> GetByDocIds([FromQuery] List<int> docIds)
     {
         return database.GetDocDetails(docIds);
     }
     
     [HttpGet("GetByWordIds")]
-    public List<KeyValuePair<int, int>> GetByWordIds(List<int> wordIds)
+    public Dictionary<int, int> GetByWordIds([FromQuery] List<int> wordIds)
     {
         return database.GetDocuments(wordIds);
     }

@@ -36,9 +36,9 @@ public class Database
     }
 
     // key is the id of the document, the value is number of search words in the document
-    public List<KeyValuePair<int, int>> GetDocuments(List<int> wordIds)
+    public Dictionary<int, int> GetDocuments(List<int> wordIds)
     {
-        var res = new List<KeyValuePair<int, int>>();
+        var res = new Dictionary<int, int>();
 
         var sql = @"SELECT docId, COUNT(wordId) AS count FROM Occurrences WHERE wordId IN " + AsString(wordIds) +
                   " GROUP BY docId ORDER BY count DESC;";
@@ -53,7 +53,7 @@ public class Database
                 var docId = reader.GetInt32(0);
                 var count = reader.GetInt32(1);
 
-                res.Add(new KeyValuePair<int, int>(docId, count));
+                res.Add(docId, count);
             }
         }
 

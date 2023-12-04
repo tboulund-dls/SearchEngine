@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleSearch
 {
@@ -37,7 +38,7 @@ namespace ConsoleSearch
 
                 // get details for the first 10             
                 var top10 = new List<int>();
-                foreach (var p in docIds.GetRange(0, Math.Min(10, docIds.Count)))
+                foreach (var p in docIds.Take(10))
                 {
                     top10.Add(p.Key);
                 }
@@ -47,7 +48,7 @@ namespace ConsoleSearch
                 int idx = 0;
                 foreach (var doc in mSearchLogic.GetDocumentDetails(top10))
                 {
-                    Console.WriteLine("" + (idx+1) + ": " + doc + " -- contains " + docIds[idx].Value + " search terms");
+                    Console.WriteLine("" + (idx+1) + ": " + doc + " -- contains " + docIds[docIds.Keys.ToArray()[idx]] + " search terms");
                     idx++;
                 }
                 Console.WriteLine("Documents: " + docIds.Count + ". Time: " + used.TotalMilliseconds);
