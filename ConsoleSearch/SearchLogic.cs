@@ -21,7 +21,7 @@ namespace ConsoleSearch
             return -1;
         }
 
-        public List<KeyValuePair<int, int>> GetDocuments(List<int> wordIds)
+        public Dictionary<int, int> GetDocuments(List<int> wordIds)
         {
             return mDatabase.GetDocuments(wordIds);
         }
