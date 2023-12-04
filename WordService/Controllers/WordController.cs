@@ -7,7 +7,7 @@ namespace WordService.Controllers;
 [Route("[controller]")]
 public class WordController : ControllerBase
 {
-    private Database database = new Database();
+    private Database database = Database.GetInstance();
 
     [HttpGet]
     public Dictionary<string, int> Get()
@@ -16,7 +16,7 @@ public class WordController : ControllerBase
     }
 
     [HttpPost]
-    public void Post(Dictionary<string, int> res)
+    public void Post([FromBody]Dictionary<string, int> res)
     {
         database.InsertAllWords(res);
     }

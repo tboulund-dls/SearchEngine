@@ -9,7 +9,7 @@ namespace Indexer
     {
         static void Main(string[] args)
         {
-            DecompressGzipFile("enron/mini.tar.gz", "mails.tar");
+            DecompressGzipFile("enron/mikro.tar.gz", "mails.tar");
             Directory.Delete("maildir", true);
             TarFile.ExtractToDirectory("mails.tar", ".", false);
             

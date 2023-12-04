@@ -6,10 +6,10 @@ namespace WordService.Controllers;
 [Route("[controller]")]
 public class OccurrenceController : ControllerBase
 {
-    private Database database = new();
+    private Database database = Database.GetInstance();
 
     [HttpPost]
-    public void Post(int docId, ISet<int> wordIds)
+    public void Post(int docId, [FromBody]ISet<int> wordIds)
     {
         database.InsertAllOcc(docId, wordIds);
     }

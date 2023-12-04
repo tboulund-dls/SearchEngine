@@ -4,17 +4,28 @@ namespace WordService;
 
 public class Database
 {
+    private static Database instance = new Database();
     private SqlConnection _connection;
-    public Database()
+    private Database()
     {
         _connection = new("Server=localhost;User Id=sa;Password=SuperSecret7!;Encrypt=false;");
         _connection.Open();
+    }
 
+    public static Database GetInstance()
+    {
+        return instance;
+    }
+
+    public void DeleteDatabase()
+    {
         Execute("DROP TABLE IF EXISTS Occurrences");
         Execute("DROP TABLE IF EXISTS Words");
         Execute("DROP TABLE IF EXISTS Documents");
+    }
 
-
+    public void RecreateDatabase()
+    {
         Execute("CREATE TABLE Documents(id INTEGER PRIMARY KEY, url VARCHAR(500))");
         Execute("CREATE TABLE Words(id INTEGER PRIMARY KEY, name VARCHAR(500))");
         Execute("CREATE TABLE Occurrences(wordId INTEGER, docId INTEGER, "

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace Indexer
 {
@@ -9,6 +11,10 @@ namespace Indexer
     {
         public void Run()
         {
+            var api = new HttpClient() { BaseAddress = new Uri("http://localhost:5092") };
+            api.Send(new HttpRequestMessage(HttpMethod.Delete, "Database"));
+            api.Send(new HttpRequestMessage(HttpMethod.Post, "Database"));
+            
             Crawler crawler = new Crawler();
 
             var directoryArray = new DirectoryInfo("maildir").GetDirectories();

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace Indexer
 {
@@ -11,7 +13,7 @@ namespace Indexer
         private Dictionary<string, int> words = new Dictionary<string, int>();
         private Dictionary<string, int> documents = new Dictionary<string, int>();
 
-        Database mdatabase = new Database();
+        private HttpClient api = new() { BaseAddress = new Uri("http://localhost:5092") };
 
         //Return a dictionary containing all words (as the key)in the file
         // [f] and the value is the number of occurrences of the key in file.
@@ -54,7 +56,11 @@ namespace Indexer
                 if (extensions.Contains(file.Extension))
                 {
                     documents.Add(file.FullName, documents.Count + 1);
-                    mdatabase.InsertDocument(documents[file.FullName], file.FullName);
+
+                    var documentMessage = new HttpRequestMessage(HttpMethod.Post, "Document?id=" + documents[file.FullName]  + "&url=" + Uri.EscapeDataString(file.FullName));
+                    api.Send(documentMessage);
+                    //mdatabase.InsertDocument(documents[file.FullName], file.FullName);
+                    
                     Dictionary<string, int> newWords = new Dictionary<string, int>();
                     ISet<string> wordsInFile = ExtractWordsInFile(file);
                     foreach (var aWord in wordsInFile)
@@ -66,9 +72,15 @@ namespace Indexer
                         }
                     }
 
-                    mdatabase.InsertAllWords(newWords);
+                    var wordMessage = new HttpRequestMessage(HttpMethod.Post, "Word");
+                    wordMessage.Content = JsonContent.Create(newWords);
+                    api.Send(wordMessage);
+                    //mdatabase.InsertAllWords(newWords);
 
-                    mdatabase.InsertAllOcc(documents[file.FullName], GetWordIdFromWords(wordsInFile));
+                    var occurrenceMessage = new HttpRequestMessage(HttpMethod.Post, "Occurrence?docId=" + documents[file.FullName]);
+                    occurrenceMessage.Content = JsonContent.Create(GetWordIdFromWords(wordsInFile));
+                    api.Send(occurrenceMessage);
+                    //mdatabase.InsertAllOcc(documents[file.FullName], GetWordIdFromWords(wordsInFile));
                 }
             }
 

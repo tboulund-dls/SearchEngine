@@ -6,7 +6,7 @@ namespace WordService.Controllers;
 [Route("[controller]")]
 public class DocumentController : ControllerBase
 {
-    private Database database = new();
+    private Database database = Database.GetInstance();
 
     [HttpGet("GetByDocIds")]
     public List<string> GetByDocIds(List<int> docIds)
