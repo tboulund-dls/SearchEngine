@@ -10,7 +10,7 @@ namespace Indexer
         static void Main(string[] args)
         {
             DecompressGzipFile("enron/mikro.tar.gz", "mails.tar");
-            Directory.Delete("maildir", true);
+            if(Directory.Exists("maildir")) Directory.Delete("maildir", true);
             TarFile.ExtractToDirectory("mails.tar", ".", false);
             
             new Renamer().Crawl(new DirectoryInfo("maildir"));
