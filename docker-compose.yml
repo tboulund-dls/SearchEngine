@@ -29,6 +29,8 @@ services:
       dockerfile: WordService/Dockerfile
     depends_on: 
       - word-db
+    deploy:
+      replicas: 2
 
 volumes:
   mssql-data:
