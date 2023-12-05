@@ -13,7 +13,7 @@ namespace Indexer
         private Dictionary<string, int> words = new Dictionary<string, int>();
         private Dictionary<string, int> documents = new Dictionary<string, int>();
 
-        private HttpClient api = new() { BaseAddress = new Uri("http://localhost:5092") };
+        private HttpClient api = new() { BaseAddress = new Uri("http://word-service") };
 
         //Return a dictionary containing all words (as the key)in the file
         // [f] and the value is the number of occurrences of the key in file.

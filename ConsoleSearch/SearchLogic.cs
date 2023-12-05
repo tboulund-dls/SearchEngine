@@ -10,7 +10,7 @@ namespace ConsoleSearch
 {
     public class SearchLogic
     {
-        private HttpClient api = new() { BaseAddress = new Uri("http://localhost:5092") };
+        private HttpClient api = new() { BaseAddress = new Uri("http://word-service") };
 
         Dictionary<string, int> mWords;
 
@@ -34,6 +34,7 @@ namespace ConsoleSearch
             var url = "Document/GetByWordIds?wordIds=" + string.Join("&wordIds=", wordIds);
             var response = api.Send(new HttpRequestMessage(HttpMethod.Get, url));
             var content = response.Content.ReadAsStringAsync().Result;
+            Console.WriteLine(content);
             return JsonSerializer.Deserialize<Dictionary<int, int>>(content);
            //return mDatabase.GetDocuments(wordIds);
         }
