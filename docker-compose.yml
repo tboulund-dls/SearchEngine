@@ -4,8 +4,6 @@ services:
     environment:
       MSSQL_SA_PASSWORD: "SuperSecret7!"
       ACCEPT_EULA: "Y"
-    ports:
-      - 1433:1433
     volumes:
       - mssql-data:/var/opt/mssql
 
