@@ -13,8 +13,8 @@ namespace ConsoleSearch
             
             while (true)
             {
-                Console.WriteLine("enter search terms - q for quit");
-                string input = Console.ReadLine() ?? string.Empty;
+                Console.WriteLine("enter search terms - q for quit [default: hello]");
+                string input = Console.ReadLine() ?? "hello"; // Search for hello by default
                 if (input.Equals("q")) break;
 
                 var wordIds = new List<int>();
