@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace ConsoleSearch
 {
@@ -52,6 +53,8 @@ namespace ConsoleSearch
                     idx++;
                 }
                 Console.WriteLine("Documents: " + docIds.Count + ". Time: " + used.TotalMilliseconds);
+                
+                Thread.Sleep(1000);
             }
         }
     }
