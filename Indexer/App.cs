@@ -11,7 +11,7 @@ namespace Indexer
     {
         public void Run()
         {
-            var api = new HttpClient() { BaseAddress = new Uri("http://localhost:5092") };
+            var api = new HttpClient() { BaseAddress = new Uri("http://word-service") };
             api.Send(new HttpRequestMessage(HttpMethod.Delete, "Database"));
             api.Send(new HttpRequestMessage(HttpMethod.Post, "Database"));
             
