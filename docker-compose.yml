@@ -15,8 +15,6 @@ services:
       dockerfile: ConsoleSearch/Dockerfile
     depends_on: 
       - word-service
-    stdin_open: true
-    tty: true
   
   indexer-service:
     build:
