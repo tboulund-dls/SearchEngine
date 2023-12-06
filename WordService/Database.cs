@@ -151,9 +151,8 @@ public class Database
             {
                 paramwordId.Value = wordId;
                 command.ExecuteNonQuery();
-
-                transaction.Commit();
             }
+            transaction.Commit();
         }
     }
 
