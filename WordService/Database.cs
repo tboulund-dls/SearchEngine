@@ -158,9 +158,9 @@ public class Database
 
     public void InsertDocument(int id, string url)
     {
-        var connection = (SqlConnection)coordinator.GetDocumentConnection();
-        var insertCmd = new SqlCommand("INSERT INTO Documents(id, url) VALUES(@id,@url)");
-        insertCmd.Connection = connection;
+        var connection = coordinator.GetDocumentConnection();
+        var insertCmd = connection.CreateCommand();
+        insertCmd.CommandText = "INSERT INTO Documents(id, url) VALUES(@id,@url)";
 
         var pName = new SqlParameter("url", url);
         insertCmd.Parameters.Add(pName);
