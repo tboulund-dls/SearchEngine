@@ -96,8 +96,8 @@ namespace Indexer
 
         public void InsertDocument(int id, string url)
         {
-            var insertCmd = new SqlCommand("INSERT INTO Documents(id, url) VALUES(@id,@url)");
-            insertCmd.Connection = _connection;
+            var insertCmd = _connection.CreateCommand();
+            insertCmd.CommandText = "INSERT INTO Documents(id, url) VALUES(@id,@url)";
 
             var pName = new SqlParameter("url", url);
             insertCmd.Parameters.Add(pName);
