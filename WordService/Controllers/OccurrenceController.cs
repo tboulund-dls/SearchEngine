@@ -9,8 +9,8 @@ public class OccurrenceController : ControllerBase
     private Database database = Database.GetInstance();
 
     [HttpPost]
-    public void Post(int docId, [FromBody]ISet<int> wordIds)
+    public async Task Post(int docId, [FromBody]ISet<int> wordIds)
     {
-        database.InsertAllOcc(docId, wordIds);
+        await database.InsertAllOcc(docId, wordIds);
     }
 }

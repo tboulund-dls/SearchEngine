@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Indexer
 {
@@ -47,7 +49,7 @@ namespace Indexer
         // in the directory [dir]. Only files with an extension in
         // [extensions] is read. The value part of the return value is
         // the number of occurrences of the key.
-        public void IndexFilesIn(DirectoryInfo dir, List<string> extensions)
+        public IEnumerable<Task> IndexFilesIn(DirectoryInfo dir, List<string> extensions)
         {
             Console.WriteLine("Crawling " + dir.FullName);
 
@@ -58,7 +60,7 @@ namespace Indexer
                     documents.Add(file.FullName, documents.Count + 1);
 
                     var documentMessage = new HttpRequestMessage(HttpMethod.Post, "Document?id=" + documents[file.FullName]  + "&url=" + Uri.EscapeDataString(file.FullName));
-                    api.Send(documentMessage);
+                    yield return api.SendAsync(documentMessage);
                     //mdatabase.InsertDocument(documents[file.FullName], file.FullName);
                     
                     Dictionary<string, int> newWords = new Dictionary<string, int>();
@@ -74,12 +76,12 @@ namespace Indexer
 
                     var wordMessage = new HttpRequestMessage(HttpMethod.Post, "Word");
                     wordMessage.Content = JsonContent.Create(newWords);
-                    api.Send(wordMessage);
+                    yield return api.SendAsync(wordMessage);
                     //mdatabase.InsertAllWords(newWords);
 
                     var occurrenceMessage = new HttpRequestMessage(HttpMethod.Post, "Occurrence?docId=" + documents[file.FullName]);
                     occurrenceMessage.Content = JsonContent.Create(GetWordIdFromWords(wordsInFile));
-                    api.Send(occurrenceMessage);
+                    yield return api.SendAsync(occurrenceMessage);
                     //mdatabase.InsertAllOcc(documents[file.FullName], GetWordIdFromWords(wordsInFile));
                 }
             }

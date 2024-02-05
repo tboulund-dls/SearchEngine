@@ -9,20 +9,20 @@ public class DocumentController : ControllerBase
     private Database database = Database.GetInstance();
 
     [HttpGet("GetByDocIds")]
-    public List<string> GetByDocIds([FromQuery] List<int> docIds)
+    public async Task<List<string>> GetByDocIds([FromQuery] List<int> docIds)
     {
-        return database.GetDocDetails(docIds);
+        return await database.GetDocDetails(docIds);
     }
     
     [HttpGet("GetByWordIds")]
-    public Dictionary<int, int> GetByWordIds([FromQuery] List<int> wordIds)
+    public async Task<Dictionary<int, int>> GetByWordIds([FromQuery] List<int> wordIds)
     {
-        return database.GetDocuments(wordIds);
+        return await database.GetDocuments(wordIds);
     }
 
     [HttpPost]
-    public void Post(int id, string url)
+    public async Task Post(int id, string url)
     {
-        database.InsertDocument(id, url);
+        await database.InsertDocument(id, url);
     }
 }

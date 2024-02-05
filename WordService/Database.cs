@@ -14,30 +14,30 @@ public class Database
         return instance;
     }
 
-    public void DeleteDatabase()
+    public async Task DeleteDatabase()
     {
         foreach (var connection in coordinator.GetAllConnections())
         {
-            Execute(connection, "DROP TABLE IF EXISTS Occurrences");
-            Execute(connection, "DROP TABLE IF EXISTS Words");
-            Execute(connection, "DROP TABLE IF EXISTS Documents");
+            await ExecuteAsync(connection, "DROP TABLE IF EXISTS Occurrences");
+            await ExecuteAsync(connection, "DROP TABLE IF EXISTS Words");
+            await ExecuteAsync(connection, "DROP TABLE IF EXISTS Documents");
         }
     }
 
-    public void RecreateDatabase()
+    public async Task RecreateDatabase()
     {
-        Execute(coordinator.GetDocumentConnection(), "CREATE TABLE Documents(id INTEGER PRIMARY KEY, url VARCHAR(500))");
-        Execute(coordinator.GetOccurrenceConnection(), "CREATE TABLE Occurrences(wordId INTEGER, docId INTEGER)");
+        await ExecuteAsync(coordinator.GetDocumentConnection(), "CREATE TABLE Documents(id INTEGER PRIMARY KEY, url VARCHAR(500))");
+        await ExecuteAsync(coordinator.GetOccurrenceConnection(), "CREATE TABLE Occurrences(wordId INTEGER, docId INTEGER)");
         //Execute(coordinator.GetOccurrenceConnection(), "CREATE INDEX word_index ON Occ (wordId)");
 
         foreach (var connection in coordinator.GetAllWordConnections())
         {
-            Execute(connection, "CREATE TABLE Words(id INTEGER PRIMARY KEY, name VARCHAR(500))");
+            await ExecuteAsync(connection, "CREATE TABLE Words(id INTEGER PRIMARY KEY, name VARCHAR(500))");
         }
     }
 
     // key is the id of the document, the value is number of search words in the document
-    public Dictionary<int, int> GetDocuments(List<int> wordIds)
+    public async Task<Dictionary<int, int>> GetDocuments(List<int> wordIds)
     {
         var res = new Dictionary<int, int>();
 
@@ -48,9 +48,9 @@ public class Database
         var selectCmd = connection.CreateCommand();
         selectCmd.CommandText = sql;
 
-        using (var reader = selectCmd.ExecuteReader())
+        using (var reader = await selectCmd.ExecuteReaderAsync())
         {
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 var docId = reader.GetInt32(0);
                 var count = reader.GetInt32(1);
@@ -67,7 +67,7 @@ public class Database
         return string.Concat("(", string.Join(',', x.Select(i => i.ToString())), ")");
     }
 
-    public List<string> GetDocDetails(List<int> docIds)
+    public async Task<List<string>> GetDocDetails(List<int> docIds)
     {
         List<string> res = new List<string>();
 
@@ -75,9 +75,9 @@ public class Database
         var selectCmd = connection.CreateCommand();
         selectCmd.CommandText = "SELECT * FROM Documents WHERE id IN " + AsString(docIds);
 
-        using (var reader = selectCmd.ExecuteReader())
+        using (var reader = await selectCmd.ExecuteReaderAsync())
         {
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 var id = reader.GetInt32(0);
                 var url = reader.GetString(1);
@@ -89,22 +89,22 @@ public class Database
         return res;
     }
 
-    private void Execute(DbConnection connection, string sql)
+    private async Task ExecuteAsync(DbConnection connection, string sql)
     {
         using var trans = connection.BeginTransaction();
         var cmd = connection.CreateCommand();
         cmd.Transaction = trans;
         cmd.CommandText = sql;
-        cmd.ExecuteNonQuery();
+        await cmd.ExecuteNonQueryAsync();
         trans.Commit();
     }
 
-    internal void InsertAllWords(Dictionary<string, int> res)
+    internal async Task InsertAllWords(Dictionary<string, int> res)
     {
         foreach (var p in res)
         {
             var connection = coordinator.GetWordConnection(p.Key);
-            using (var transaction = connection.BeginTransaction())
+            await using (var transaction = await connection.BeginTransactionAsync())
             {
                 var command = connection.CreateCommand();
                 command.Transaction = transaction;
@@ -120,18 +120,18 @@ public class Database
 
                 paramName.Value = p.Key;
                 paramId.Value = p.Value;
-                command.ExecuteNonQuery();
+                await command.ExecuteNonQueryAsync();
                 
-                transaction.Commit();
+                await transaction.CommitAsync();
             }
 
         }
     }
 
-    internal void InsertAllOcc(int docId, ISet<int> wordIds)
+    internal async Task InsertAllOcc(int docId, ISet<int> wordIds)
     {
         var connection = coordinator.GetOccurrenceConnection();
-        using (var transaction = connection.BeginTransaction())
+        await using (var transaction = await connection.BeginTransactionAsync())
         {
             var command = connection.CreateCommand();
             command.Transaction = transaction;
@@ -151,13 +151,13 @@ public class Database
             foreach (var wordId in wordIds)
             {
                 paramwordId.Value = wordId;
-                command.ExecuteNonQuery();
+                await command.ExecuteNonQueryAsync();
             }
-            transaction.Commit();
+            await transaction.CommitAsync();
         }
     }
 
-    public void InsertDocument(int id, string url)
+    public async Task InsertDocument(int id, string url)
     {
         var connection = coordinator.GetDocumentConnection();
         var insertCmd = connection.CreateCommand();
@@ -169,10 +169,10 @@ public class Database
         var pCount = new SqlParameter("id", id);
         insertCmd.Parameters.Add(pCount);
 
-        insertCmd.ExecuteNonQuery();
+        await insertCmd.ExecuteNonQueryAsync();
     }
 
-    public Dictionary<string, int> GetAllWords()
+    public async Task<Dictionary<string, int>> GetAllWords()
     {
         Dictionary<string, int> res = new Dictionary<string, int>();
 
@@ -181,9 +181,9 @@ public class Database
             var selectCmd = connection.CreateCommand();
             selectCmd.CommandText = "SELECT * FROM Words";
 
-            using (var reader = selectCmd.ExecuteReader())
+            await using (var reader = await selectCmd.ExecuteReaderAsync())
             {
-                while (reader.Read())
+                while (await reader.ReadAsync())
                 {
                     var id = reader.GetInt32(0);
                     var w = reader.GetString(1);
