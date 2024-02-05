@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using Microsoft.Data.SqlClient;
 
 namespace WordService;
@@ -88,7 +89,7 @@ public class Database
         return res;
     }
 
-    private void Execute(IDbConnection connection, string sql)
+    private void Execute(DbConnection connection, string sql)
     {
         using var trans = connection.BeginTransaction();
         var cmd = connection.CreateCommand();
